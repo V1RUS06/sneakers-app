@@ -22,7 +22,7 @@ export const SneakersCard = () => {
       <div className="d-flex justify-between align-center">
         <div className="d-flex flex-column ">
           <span>Цена: </span>
-          <b>228 </b>
+          <b>12 999 руб.</b>
         </div>
         <img className="plus" src={"/img/btn-unchecked.svg"} alt="Plus" />
       </div>
