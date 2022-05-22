@@ -4,9 +4,10 @@ import { SneakersTypes } from "../../../types";
 
 interface Props {
   sneakersData: SneakersTypes | null;
+  onRemove: (id: number) => void;
 }
 
-export const CardBasket: FC<Props> = ({ sneakersData }) => {
+export const CardBasket: FC<Props> = ({ sneakersData, onRemove }) => {
   return (
     <div className="cartItem d-flex align-center">
       <div
@@ -17,7 +18,16 @@ export const CardBasket: FC<Props> = ({ sneakersData }) => {
         <p className="mb-5">Мужские Кроссовки Nike Air Max 270</p>
         <b>12 999 руб.</b>
       </div>
-      <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
+      <img
+        className="removeBtn"
+        src="/img/btn-remove.svg"
+        alt="Remove"
+        onClick={
+          sneakersData
+            ? () => onRemove(sneakersData.id)
+            : () => console.log("Ошибка")
+        }
+      />
     </div>
   );
 };

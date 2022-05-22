@@ -1,0 +1,27 @@
+.cartEmpty {
+  text-align: center;
+
+  p {
+    width: 280px;
+    line-height: 24px;
+  }
+
+  .greenButton {
+    width: 245px;
+    margin-top: 20px;
+
+    &:hover {
+      img{
+        transform:rotate(180deg) translateX(5px);
+      }
+    }
+
+    img {
+      position: relative;
+      top: 1px;
+      left: -10px;
+      transform: translateX(-2px)rotate(180deg);
+      transition: transform .15s ease-in-out;
+    }
+  }
+}

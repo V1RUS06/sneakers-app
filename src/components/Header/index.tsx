@@ -27,8 +27,8 @@ export const Header: FC<Props> = ({ onOpenCart }) => {
           <img width={18} height={18} src="/img/shop.svg" alt="Корзина" />
           <div className="shop_current-price"> 555 руб. </div>
         </li>
-        <li className="mr-30">
-          <img width={18} height={18} src="/img/Heart.png" alt="Закладки" />
+        <li className="mr-30 cu-p">
+          <img width={18} height={18} src="/img/Heart.svg" alt="Закладки" />
         </li>
         <li>
           <img width={18} height={18} src="/img/Me.svg" alt="Профиль" />
