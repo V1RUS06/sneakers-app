@@ -1,12 +1,17 @@
-import React from "react";
+import React, { FC } from "react";
 import "./CardBasket.scss";
+import { SneakersTypes } from "../../../types";
 
-export const CardBasket = () => {
+interface Props {
+  sneakersData: SneakersTypes | null;
+}
+
+export const CardBasket: FC<Props> = ({ sneakersData }) => {
   return (
     <div className="cartItem d-flex align-center">
       <div
         className="cartItemImg"
-        style={{ backgroundImage: "url(img/sneakers/1.jpg)" }}
+        style={{ backgroundImage: `url(${sneakersData?.imageUrl})` }}
       />
       <div className="mr-20 flex">
         <p className="mb-5">Мужские Кроссовки Nike Air Max 270</p>

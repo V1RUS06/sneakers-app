@@ -2,7 +2,16 @@ import React, { FC, useState } from "react";
 import "./CardSneakers.scss";
 import { SneakersTypes } from "../../../types";
 
-export const CardSneakers: FC<SneakersTypes> = ({ title, price, imageUrl }) => {
+interface Props extends SneakersTypes {
+  onAddToCart: () => void;
+}
+
+export const CardSneakers: FC<Props> = ({
+  title,
+  price,
+  imageUrl,
+  onAddToCart,
+}) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [isAdded, setIsAdded] = useState<boolean>(false);
 
@@ -11,6 +20,7 @@ export const CardSneakers: FC<SneakersTypes> = ({ title, price, imageUrl }) => {
   };
   const onAddClick = () => {
     setIsAdded(!isAdded);
+    onAddToCart();
   };
 
   return (

@@ -8,6 +8,7 @@ import axios from "axios";
 function App() {
   const [cartOpened, setCartOpened] = useState<boolean>(false);
   const [sneakers, setSneakers] = useState<SneakersTypes[] | []>([]);
+  const [cartSneakers, setCartSneakers] = useState<SneakersTypes[] | []>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,9 +20,18 @@ function App() {
     fetchData();
   }, []);
 
+  const onAddToCart = (obj: SneakersTypes ) => {
+    if (cartSneakers && !cartSneakers.includes(obj)) {
+      setCartSneakers((prevState) => [...prevState, obj]);
+    }
+    return;
+  };
+
   return (
     <div className="wrapper clear">
-      {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
+      {cartOpened && (
+        <Drawer onClose={() => setCartOpened(false)} items={cartSneakers} />
+      )}
       <Header onOpenCart={() => setCartOpened(true)} />
       <div className="content p-40 ">
         <div className="d-flex justify-between">
@@ -33,7 +43,11 @@ function App() {
         </div>
         <div className="d-flex flex-wrap mt-25">
           {sneakers.map((item) => (
-            <CardSneakers {...item} key={item.id} />
+            <CardSneakers
+              {...item}
+              key={item.id}
+              onAddToCart={() => onAddToCart(item)}
+            />
           ))}
         </div>
       </div>

@@ -1,12 +1,14 @@
 import React, { FC } from "react";
 import "./Drawer.scss";
 import { CardBasket } from "../Card/CardBasket";
+import { SneakersTypes } from "../../types";
 
 interface Props {
   onClose?: () => void;
+  items: SneakersTypes[] | [];
 }
 
-const Drawer: FC<Props> = ({ onClose }) => {
+const Drawer: FC<Props> = ({ onClose, items }) => {
   return (
     <div className="overlay">
       <div className="drawer">
@@ -21,9 +23,9 @@ const Drawer: FC<Props> = ({ onClose }) => {
         </h2>
 
         <div className="items">
-          <CardBasket />
-          <CardBasket />
-          <CardBasket />
+          {items.map((item) => (
+            <CardBasket key={item.id} sneakersData={item} />
+          ))}
         </div>
 
         <div className="cartTotalBlock">
