@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import style from "./Card.module.scss";
+import "./CardSneakers.scss";
 
 export const SneakersCard = () => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -9,8 +9,8 @@ export const SneakersCard = () => {
   };
 
   return (
-    <div className={style.card}>
-      <div className={style.favorite}>
+    <div className="card">
+      <div className="favorite">
         <img
           src={isFavorite ? "..//img/liked.svg" : "/img/unliked.svg"}
           alt="Unliked"
@@ -24,7 +24,7 @@ export const SneakersCard = () => {
           <span>Цена: </span>
           <b>228 </b>
         </div>
-        <img className={style.plus} src={"/img/btn-unchecked.svg"} alt="Plus" />
+        <img className="plus" src={"/img/btn-unchecked.svg"} alt="Plus" />
       </div>
     </div>
   );
