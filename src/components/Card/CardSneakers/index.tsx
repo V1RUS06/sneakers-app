@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import "./CardSneakers.scss";
 
-export const SneakersCard = () => {
+export const CardSneakers = () => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isAdded, setIsAdded] = useState<boolean>(false);
 
   const onFavoriteClick = () => {
     setIsFavorite(!isFavorite);
+  };
+  const onAddClick = () => {
+    setIsAdded(!isAdded);
   };
 
   return (
@@ -24,7 +28,12 @@ export const SneakersCard = () => {
           <span>Цена: </span>
           <b>12 999 руб.</b>
         </div>
-        <img className="plus" src={"/img/btn-unchecked.svg"} alt="Plus" />
+        <img
+          className="plus"
+          src={isAdded ? "/img/btn-checked.svg" : "/img/btn-unchecked.svg"}
+          alt="Plus"
+          onClick={onAddClick}
+        />
       </div>
     </div>
   );

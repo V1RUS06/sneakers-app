@@ -1,7 +1,11 @@
-import React from "react";
+import React, { FC } from "react";
 import "./Header.scss";
 
-export const Header = () => {
+interface Props {
+  onOpenCart: () => void;
+}
+
+export const Header: FC<Props> = ({ onOpenCart }) => {
   return (
     <header className="d-flex justify-between align-center p-40">
       <div className="d-flex align-center">
@@ -19,7 +23,7 @@ export const Header = () => {
       </div>
 
       <ul className="d-flex">
-        <li className="mr-30 cu-p d-flex">
+        <li className="mr-30 cu-p d-flex" onClick={onOpenCart}>
           <img width={18} height={18} src="/img/shop.svg" alt="Корзина" />
           <div className="shop_current-price"> 555 руб. </div>
         </li>
