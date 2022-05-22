@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import "./CardSneakers.scss";
+import { SneakersTypes } from "../../../types";
 
-export const CardSneakers = () => {
+export const CardSneakers: FC<SneakersTypes> = ({ title, price, imageUrl }) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [isAdded, setIsAdded] = useState<boolean>(false);
 
@@ -21,12 +22,12 @@ export const CardSneakers = () => {
           onClick={onFavoriteClick}
         />
       </div>
-      <img width={133} height={112} src="/img/sneakers/1.jpg" alt="" />
-      <h5> Мужские Кроссовки Nike Blazer Mid Suede </h5>
+      <img width={133} height={112} src={`${imageUrl}`} alt="" />
+      <h5> {title} </h5>
       <div className="d-flex justify-between align-center">
         <div className="d-flex flex-column ">
           <span>Цена: </span>
-          <b>12 999 руб.</b>
+          <b>{price} руб.</b>
         </div>
         <img
           className="plus"

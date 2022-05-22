@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import { CardSneakers } from "./components/Card/CardSneakers";
 import Drawer from "./components/Drawer";
+import { SneakersTypes } from "./types";
+import axios from "axios";
 
 function App() {
   const [cartOpened, setCartOpened] = useState<boolean>(false);
+  const [sneakers, setSneakers] = useState<SneakersTypes[] | []>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchSneakers = await axios.get(
+        "https://60d8c024eec56d00174774c1.mockapi.io/items"
+      );
+      setSneakers(fetchSneakers.data);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="wrapper clear">
@@ -19,11 +32,9 @@ function App() {
           </div>
         </div>
         <div className="d-flex flex-wrap mt-25">
-          <CardSneakers />
-          <CardSneakers />
-          <CardSneakers />
-          <CardSneakers />
-          <CardSneakers />
+          {sneakers.map((item) => (
+            <CardSneakers {...item} key={item.id} />
+          ))}
         </div>
       </div>
     </div>
