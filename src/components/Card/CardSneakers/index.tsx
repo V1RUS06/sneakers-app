@@ -3,28 +3,31 @@ import "./CardSneakers.scss";
 import { SneakersTypes } from "../../../types";
 
 interface Props extends SneakersTypes {
-  onAddToCart: () => void;
-  onAddToFavorite: () => void;
+  onAddToCart: ({ id, title, imageUrl, price }: SneakersTypes) => void;
+  onAddToFavorite: ({ id, title, imageUrl, price }: SneakersTypes) => void;
+  favorite?: boolean;
 }
 
 export const CardSneakers: FC<Props> = ({
+  id,
   title,
   price,
   imageUrl,
   onAddToCart,
   onAddToFavorite,
+  favorite = false,
 }) => {
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(favorite);
   const [isAdded, setIsAdded] = useState<boolean>(false);
 
   const onFavoriteClick = () => {
     setIsFavorite(!isFavorite);
-    onAddToFavorite();
+    onAddToFavorite({ id, title, imageUrl, price });
   };
 
   const onAddClick = () => {
     setIsAdded(!isAdded);
-    onAddToCart();
+    onAddToCart({ id, title, imageUrl, price });
   };
 
   return (

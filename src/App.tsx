@@ -4,6 +4,9 @@ import { CardSneakers } from "./components/Card/CardSneakers";
 import Drawer from "./components/Drawer";
 import { SneakersTypes } from "./types";
 import axios from "axios";
+import Home from "./pages/Home";
+import { Route } from "react-router-dom";
+import Favorites from "./pages/Favorites";
 
 function App() {
   const [cartOpened, setCartOpened] = useState<boolean>(false);
@@ -20,8 +23,12 @@ function App() {
       const fetchCartSneakers = await axios.get(
         "https://60d8c024eec56d00174774c1.mockapi.io/cart"
       );
+      const fetchFavorites = await axios.get(
+        "https://60d8c024eec56d00174774c1.mockapi.io/favorites"
+      );
       setSneakers(fetchSneakers.data);
       setCartSneakers(fetchCartSneakers.data);
+      setFavorites(fetchFavorites.data);
     };
     fetchData();
   }, []);
@@ -47,9 +54,25 @@ function App() {
     setSearchValue("");
   };
 
-  const onAddToFavorite = (obj: SneakersTypes) => {
-    axios.post("https://60d8c024eec56d00174774c1.mockapi.io/favorites", obj);
-    setFavorites((prevState) => [...prevState, obj]);
+  const onAddToFavorite = async (obj: SneakersTypes) => {
+    try {
+      if (favorites.find((item) => item.id === obj.id)) {
+        axios.delete(
+          `https://60d8c024eec56d00174774c1.mockapi.io/favorites/${obj.id}`
+        );
+        setFavorites((prevState) =>
+          prevState.filter((item) => item.id !== obj.id)
+        );
+      } else {
+        const { data } = await axios.post(
+          "https://60d8c024eec56d00174774c1.mockapi.io/favorites",
+          obj
+        );
+        setFavorites((prevState) => [...prevState, data]);
+      }
+    } catch (e) {
+      console.log("Не удалось добавить в избранные");
+    }
   };
 
   return (
@@ -62,44 +85,22 @@ function App() {
         />
       )}
       <Header onOpenCart={() => setCartOpened(true)} />
-      <div className="content p-40 ">
-        <div className="d-flex justify-between">
-          <h1>
-            {searchValue ? `Поиск по запросу: ${searchValue}` : "Все кроссовки"}
-          </h1>
-          <div className="search-block d-flex">
-            <img src="/img/search.svg" alt="Search" />
-            {searchValue && (
-              <img
-                className="removeBtn cu-p clear"
-                src="/img/btn-remove.svg"
-                alt="Clear"
-                onClick={onClearSearchInput}
-              />
-            )}
-            <input
-              type="text"
-              placeholder="Поиск..."
-              onChange={onChangeSearchInput}
-              value={searchValue}
-            />
-          </div>
-        </div>
-        <div className="d-flex flex-wrap mt-25">
-          {sneakers
-            .filter((elem) =>
-              elem.title.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            .map((item) => (
-              <CardSneakers
-                {...item}
-                key={item.id}
-                onAddToCart={() => onAddToCart(item)}
-                onAddToFavorite={() => onAddToFavorite(item)}
-              />
-            ))}
-        </div>
-      </div>
+      <Route path="/" exact>
+        <Home
+          sneakers={sneakers}
+          cartSneakers={cartSneakers}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          onChangeSearchInput={onChangeSearchInput}
+          onAddToFavorite={onAddToFavorite}
+          onAddToCart={onAddToCart}
+          onClearSearchInput={onClearSearchInput}
+        />
+      </Route>
+
+      <Route path="/favorites" exact>
+        <Favorites favorites={favorites} onAddToFavorite={onAddToFavorite} />
+      </Route>
     </div>
   );
 }
