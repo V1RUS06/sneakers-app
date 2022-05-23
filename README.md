@@ -11,5 +11,5 @@
 - mockAPI
 - Axios
 
-##Посмотреть проект можно по ссылке:
+## Посмотреть проект можно по ссылке:
 https://sneakers-du77f7nen-v1rus06.vercel.app/
