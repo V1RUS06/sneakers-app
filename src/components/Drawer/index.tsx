@@ -12,9 +12,10 @@ interface Props {
   onClose: () => void;
   onRemove: (id: number) => void;
   items: SneakersTypes[] | [];
+  opened: boolean;
 }
 
-const Drawer: FC<Props> = ({ onClose, items, onRemove }) => {
+const Drawer: FC<Props> = ({ onClose, items, onRemove, opened }) => {
   const [isOrderComplete, setIsOrderComplete] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<string | number | null>(null);
@@ -52,7 +53,7 @@ const Drawer: FC<Props> = ({ onClose, items, onRemove }) => {
   };
 
   return (
-    <div className="overlay">
+    <div className={`overlay ${opened ? "overlayVisible" : ""}`}>
       <div className="drawer">
         <h2 className="mb-30 d-flex justify-between ">
           Корзина{" "}
