@@ -1,12 +1,13 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, createContext, useEffect, useState } from "react";
 import { Header } from "./components/Header";
-import { CardSneakers } from "./components/Card/CardSneakers";
+
 import Drawer from "./components/Drawer";
 import { SneakersTypes } from "./types";
 import axios from "axios";
 import Home from "./pages/Home";
 import { Route } from "react-router-dom";
 import Favorites from "./pages/Favorites";
+import AppContext from "./context/AppContext";
 
 function App() {
   const [cartOpened, setCartOpened] = useState<boolean>(false);
@@ -14,28 +15,39 @@ function App() {
   const [cartSneakers, setCartSneakers] = useState<SneakersTypes[] | []>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [favorites, setFavorites] = useState<SneakersTypes[] | []>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchSneakers = await axios.get(
-        "https://60d8c024eec56d00174774c1.mockapi.io/items"
-      );
+      setIsLoading(true);
       const fetchCartSneakers = await axios.get(
         "https://60d8c024eec56d00174774c1.mockapi.io/cart"
       );
       const fetchFavorites = await axios.get(
         "https://60d8c024eec56d00174774c1.mockapi.io/favorites"
       );
-      setSneakers(fetchSneakers.data);
+      const fetchSneakers = await axios.get(
+        "https://60d8c024eec56d00174774c1.mockapi.io/items"
+      );
+
+      setIsLoading(false);
       setCartSneakers(fetchCartSneakers.data);
       setFavorites(fetchFavorites.data);
+      setSneakers(fetchSneakers.data);
     };
     fetchData();
   }, []);
 
   const onAddToCart = (obj: SneakersTypes) => {
-    if (cartSneakers.find((item) => item.id === obj.id)) {
-      return;
+    try {
+    } catch (e) {}
+    if (cartSneakers.find((item) => Number(item.id) === Number(obj.id))) {
+      setCartSneakers((prevState) =>
+        prevState.filter((item) => Number(item.id) !== Number(obj.id))
+      );
+      axios.delete(
+        `https://60d8c024eec56d00174774c1.mockapi.io/cart/${obj.id}`
+      );
     } else {
       axios.post("https://60d8c024eec56d00174774c1.mockapi.io/cart", obj);
       setCartSneakers((prevState) => [...prevState, obj]);
@@ -56,12 +68,12 @@ function App() {
 
   const onAddToFavorite = async (obj: SneakersTypes) => {
     try {
-      if (favorites.find((item) => item.id === obj.id)) {
+      if (favorites.find((item) => Number(item.id) === Number(obj.id))) {
         axios.delete(
           `https://60d8c024eec56d00174774c1.mockapi.io/favorites/${obj.id}`
         );
         setFavorites((prevState) =>
-          prevState.filter((item) => item.id !== obj.id)
+          prevState.filter((item) => Number(item.id) !== Number(obj.id))
         );
       } else {
         const { data } = await axios.post(
@@ -75,33 +87,51 @@ function App() {
     }
   };
 
-  return (
-    <div className="wrapper clear">
-      {cartOpened && (
-        <Drawer
-          onClose={() => setCartOpened(false)}
-          items={cartSneakers}
-          onRemove={onRemoveItem}
-        />
-      )}
-      <Header onOpenCart={() => setCartOpened(true)} />
-      <Route path="/" exact>
-        <Home
-          sneakers={sneakers}
-          cartSneakers={cartSneakers}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          onChangeSearchInput={onChangeSearchInput}
-          onAddToFavorite={onAddToFavorite}
-          onAddToCart={onAddToCart}
-          onClearSearchInput={onClearSearchInput}
-        />
-      </Route>
+  const isSneakersAdded = (id: number | string) => {
+    return cartSneakers.some(
+      (obj: SneakersTypes) => Number(obj.id) === Number(id)
+    );
+  };
 
-      <Route path="/favorites" exact>
-        <Favorites favorites={favorites} onAddToFavorite={onAddToFavorite} />
-      </Route>
-    </div>
+  return (
+    <AppContext.Provider
+      value={{
+        sneakers,
+        favorites,
+        cartSneakers,
+        isSneakersAdded,
+        setCartOpened,
+        setCartSneakers,
+      }}
+    >
+      <div className="wrapper clear">
+        {cartOpened && (
+          <Drawer
+            onClose={() => setCartOpened(false)}
+            items={cartSneakers}
+            onRemove={onRemoveItem}
+          />
+        )}
+        <Header onOpenCart={() => setCartOpened(true)} />
+        <Route path="/" exact>
+          <Home
+            sneakers={sneakers}
+            cartSneakers={cartSneakers}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            onChangeSearchInput={onChangeSearchInput}
+            onAddToFavorite={onAddToFavorite}
+            onAddToCart={onAddToCart}
+            onClearSearchInput={onClearSearchInput}
+            isLoading={isLoading}
+          />
+        </Route>
+
+        <Route path="/favorites" exact>
+          <Favorites onAddToFavorite={onAddToFavorite} />
+        </Route>
+      </div>
+    </AppContext.Provider>
   );
 }
 

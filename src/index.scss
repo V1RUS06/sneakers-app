@@ -70,6 +70,10 @@ body {
   .greenButton {
     position: relative;
 
+    &:disabled {
+      animation: button-loading .6s ease-in-out infinite;
+    }
+
     &:hover {
       img {
         transform: translateX(5px);
@@ -100,8 +104,24 @@ body {
     &:hover {
       background-color: lighten(#9dd558, 5%);
     }
+    &:disabled {
+    background-color: #bebebe !important;
+    cursor: default;
+    }
 
     &:active {
       background-color: darken(#9dd558, 5%);
     }
+}
+
+@keyframes button-loading {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .7;
+  }
+  100% {
+    opacity: 1;
+  }
 }

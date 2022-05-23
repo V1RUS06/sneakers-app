@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { CardSneakers } from "../components/Card/CardSneakers";
 import { SneakersTypes } from "../types";
+import AppContext from "../context/AppContext";
 
 const Home: FC<any> = ({
   sneakers,
@@ -11,7 +12,25 @@ const Home: FC<any> = ({
   onAddToFavorite,
   onAddToCart,
   onClearSearchInput,
+  isLoading,
 }) => {
+  const renderItems = () => {
+    const filteredSneakers = sneakers.filter((elem: any) =>
+      elem.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    return (isLoading ? [...Array(8)] : filteredSneakers).map(
+      (item: any, index: any) => (
+        <CardSneakers
+          {...item}
+          key={index}
+          onAddToCart={() => onAddToCart(item)}
+          onAddToFavorite={() => onAddToFavorite(item)}
+          loading={isLoading}
+        />
+      )
+    );
+  };
+
   return (
     <div className="content p-40 ">
       <div className="d-flex justify-between">
@@ -36,20 +55,7 @@ const Home: FC<any> = ({
           />
         </div>
       </div>
-      <div className="d-flex flex-wrap mt-25">
-        {sneakers
-          .filter((elem: any) =>
-            elem.title.toLowerCase().includes(searchValue.toLowerCase())
-          )
-          .map((item: any) => (
-            <CardSneakers
-              {...item}
-              key={item.id}
-              onAddToCart={() => onAddToCart(item)}
-              onAddToFavorite={() => onAddToFavorite(item)}
-            />
-          ))}
-      </div>
+      <div className="d-flex flex-wrap mt-25">{renderItems()}</div>
     </div>
   );
 };
