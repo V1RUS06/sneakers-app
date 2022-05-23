@@ -20,44 +20,56 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
-      const fetchCartSneakers = await axios.get(
-        "https://60d8c024eec56d00174774c1.mockapi.io/cart"
-      );
-      const fetchFavorites = await axios.get(
-        "https://60d8c024eec56d00174774c1.mockapi.io/favorites"
-      );
-      const fetchSneakers = await axios.get(
-        "https://60d8c024eec56d00174774c1.mockapi.io/items"
-      );
+      try {
+        const [fetchCartSneakers, fetchFavorites, fetchSneakers] =
+          await Promise.all([
+            axios.get("https://60d8c024eec56d00174774c1.mockapi.io/cart"),
+            axios.get("https://60d8c024eec56d00174774c1.mockapi.io/favorites"),
+            axios.get("https://60d8c024eec56d00174774c1.mockapi.io/items"),
+          ]);
 
-      setIsLoading(false);
-      setCartSneakers(fetchCartSneakers.data);
-      setFavorites(fetchFavorites.data);
-      setSneakers(fetchSneakers.data);
+        setIsLoading(false);
+        setCartSneakers(fetchCartSneakers.data);
+        setFavorites(fetchFavorites.data);
+        setSneakers(fetchSneakers.data);
+      } catch (e) {
+        console.log("Ошибка при запросе данных", e);
+      }
     };
     fetchData();
   }, []);
 
-  const onAddToCart = (obj: SneakersTypes) => {
+  const onAddToCart = async (obj: SneakersTypes) => {
     try {
-    } catch (e) {}
-    if (cartSneakers.find((item) => Number(item.id) === Number(obj.id))) {
-      setCartSneakers((prevState) =>
-        prevState.filter((item) => Number(item.id) !== Number(obj.id))
-      );
-      axios.delete(
-        `https://60d8c024eec56d00174774c1.mockapi.io/cart/${obj.id}`
-      );
-    } else {
-      axios.post("https://60d8c024eec56d00174774c1.mockapi.io/cart", obj);
-      setCartSneakers((prevState) => [...prevState, obj]);
+      if (cartSneakers.find((item) => Number(item.id) === Number(obj.id))) {
+        setCartSneakers((prevState) =>
+          prevState.filter((item) => Number(item.id) !== Number(obj.id))
+        );
+        await axios.delete(
+          `https://60d8c024eec56d00174774c1.mockapi.io/cart/${obj.id}`
+        );
+      } else {
+        setCartSneakers((prevState) => [...prevState, obj]);
+
+        await axios.post(
+          "https://60d8c024eec56d00174774c1.mockapi.io/cart",
+          obj
+        );
+      }
+    } catch (e) {
+      console.log("Ошибка при добавлении в корзину");
     }
   };
 
   const onRemoveItem = (id: number) => {
-    axios.delete(`https://60d8c024eec56d00174774c1.mockapi.io/cart/${id}`);
-    setCartSneakers((prevState) => prevState.filter((item) => item.id !== id));
+    try {
+      axios.delete(`https://60d8c024eec56d00174774c1.mockapi.io/cart/${id}`);
+      setCartSneakers((prevState) =>
+        prevState.filter((item) => item.id !== id)
+      );
+    } catch (e) {
+      console.log("Ошибка при удалении из корзины", e);
+    }
   };
 
   const onChangeSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
