@@ -4,3 +4,8 @@ export interface SneakersTypes {
   price: number | string;
   imageUrl: string;
 }
+
+export interface OrdersTypes {
+  id: number;
+  items: SneakersTypes[];
+}

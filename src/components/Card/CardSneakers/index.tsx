@@ -5,10 +5,9 @@ import ContentLoader from "react-content-loader";
 import AppContext from "../../../context/AppContext";
 
 interface Props extends SneakersTypes {
-  onAddToCart: ({ id, title, imageUrl, price }: SneakersTypes) => void;
-  onAddToFavorite: ({ id, title, imageUrl, price }: SneakersTypes) => void;
+  onAddToCart?: ({ id, title, imageUrl, price }: SneakersTypes) => void;
+  onAddToFavorite?: ({ id, title, imageUrl, price }: SneakersTypes) => void;
   favorite?: boolean;
-  added: boolean;
   loading: boolean;
 }
 
@@ -20,7 +19,6 @@ export const CardSneakers: FC<Props> = ({
   onAddToCart,
   onAddToFavorite,
   favorite = false,
-  added = false,
   loading = false,
 }) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(favorite);
@@ -28,11 +26,11 @@ export const CardSneakers: FC<Props> = ({
 
   const onFavoriteClick = () => {
     setIsFavorite(!isFavorite);
-    onAddToFavorite({ id, title, imageUrl, price });
+    onAddToFavorite && onAddToFavorite({ id, title, imageUrl, price });
   };
 
   const onAddClick = () => {
-    onAddToCart({ id, title, imageUrl, price });
+    onAddToCart && onAddToCart({ id, title, imageUrl, price });
   };
 
   return (
@@ -55,11 +53,13 @@ export const CardSneakers: FC<Props> = ({
       ) : (
         <>
           <div className="favorite">
-            <img
-              src={isFavorite ? "..//img/liked.svg" : "/img/unliked.svg"}
-              alt="Unliked"
-              onClick={onFavoriteClick}
-            />
+            {onAddToFavorite && (
+              <img
+                src={isFavorite ? "..//img/liked.svg" : "/img/unliked.svg"}
+                alt="Unliked"
+                onClick={onFavoriteClick}
+              />
+            )}
           </div>
           <img width={133} height={112} src={`${imageUrl}`} alt="" />
           <h5> {title} </h5>
@@ -68,16 +68,18 @@ export const CardSneakers: FC<Props> = ({
               <span>Цена: </span>
               <b>{price} руб.</b>
             </div>
-            <img
-              className="plus"
-              src={
-                state?.isSneakersAdded(id)
-                  ? "/img/btn-checked.svg"
-                  : "/img/btn-unchecked.svg"
-              }
-              alt="Plus"
-              onClick={onAddClick}
-            />
+            {onAddToCart && (
+              <img
+                className="plus"
+                src={
+                  state?.isSneakersAdded(id)
+                    ? "/img/btn-checked.svg"
+                    : "/img/btn-unchecked.svg"
+                }
+                alt="Plus"
+                onClick={onAddClick}
+              />
+            )}
           </div>
         </>
       )}

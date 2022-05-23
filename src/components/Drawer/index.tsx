@@ -19,6 +19,10 @@ const Drawer: FC<Props> = ({ onClose, items, onRemove }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<string | number | null>(null);
   const state = useContext(AppContext);
+  const totalPrice = state?.cartSneakers.reduce(
+    (sum, obj) => Number(obj.price) + sum,
+    0
+  );
 
   const onClickOrder = async () => {
     try {
@@ -76,12 +80,12 @@ const Drawer: FC<Props> = ({ onClose, items, onRemove }) => {
                 <li className="d-flex">
                   <span>Итог:</span>
                   <div />
-                  <b>24 484 р.</b>
+                  <b>{totalPrice} р.</b>
                 </li>
                 <li className="d-flex">
                   <span>Налог 5%:</span>
                   <div />
-                  <b>1074 руб. </b>
+                  <b>{totalPrice && Math.round(totalPrice * 0.05)} руб. </b>
                 </li>
               </ul>
               <button

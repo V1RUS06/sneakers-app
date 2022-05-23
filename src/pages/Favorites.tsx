@@ -12,7 +12,9 @@ const Favorites: FC<Props> = ({ onAddToFavorite }) => {
 
   return (
     <div className="content p-40 ">
-      <div className="d-flex justify-between">Мои закладки</div>
+      <div className="d-flex justify-between">
+        <h1>Мои закладки</h1>
+      </div>
       <div className="d-flex flex-wrap mt-25">
         {state?.favorites.map((item: any) => (
           <CardSneakers

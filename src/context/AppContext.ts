@@ -8,6 +8,8 @@ interface AppContextInterface {
   isSneakersAdded: (id: number | string) => void;
   setCartOpened: Dispatch<boolean>;
   setCartSneakers: Dispatch<SneakersTypes[] | []>;
+  onAddToFavorite: (obj: SneakersTypes) => void;
+  onAddToCart: (obj: SneakersTypes) => void;
 }
 
 export const AppContext = createContext<AppContextInterface | null>(null);
