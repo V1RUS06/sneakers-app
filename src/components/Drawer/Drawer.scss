@@ -1,5 +1,5 @@
 .overlay {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   z-index: 1;
@@ -9,7 +9,6 @@
   visibility: hidden;
   opacity: 0;
   transition: opacity .1s ease-in-out, visibility .1s ease-in-out;
-  overflow: hidden;
 }
 .overlayVisible{
   visibility: visible;
