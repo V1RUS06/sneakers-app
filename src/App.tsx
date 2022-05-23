@@ -1,4 +1,4 @@
-import React, { ChangeEvent, createContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Header } from "./components/Header";
 
 import Drawer from "./components/Drawer";
@@ -41,19 +41,33 @@ function App() {
 
   const onAddToCart = async (obj: SneakersTypes) => {
     try {
-      if (cartSneakers.find((item) => Number(item.id) === Number(obj.id))) {
+      const findItem = cartSneakers.find(
+        (item) => Number(item.parentId) === Number(obj.id)
+      );
+
+      if (findItem) {
         setCartSneakers((prevState) =>
-          prevState.filter((item) => Number(item.id) !== Number(obj.id))
+          prevState.filter((item) => Number(item.parentId) !== Number(obj.id))
         );
         await axios.delete(
-          `https://60d8c024eec56d00174774c1.mockapi.io/cart/${obj.id}`
+          `https://60d8c024eec56d00174774c1.mockapi.io/cart/${findItem.id}`
         );
       } else {
         setCartSneakers((prevState) => [...prevState, obj]);
-
-        await axios.post(
+        const { data } = await axios.post(
           "https://60d8c024eec56d00174774c1.mockapi.io/cart",
           obj
+        );
+        setCartSneakers((prevState: any) =>
+          prevState.map((item: any) => {
+            if (item.parentId === data.parentId) {
+              return {
+                ...item,
+                id: data.id,
+              };
+            }
+            return item;
+          })
         );
       }
     } catch (e) {
@@ -65,7 +79,7 @@ function App() {
     try {
       axios.delete(`https://60d8c024eec56d00174774c1.mockapi.io/cart/${id}`);
       setCartSneakers((prevState) =>
-        prevState.filter((item) => item.id !== id)
+        prevState.filter((item) => Number(item.id) !== Number(id))
       );
     } catch (e) {
       console.log("Ошибка при удалении из корзины", e);
@@ -102,7 +116,7 @@ function App() {
 
   const isSneakersAdded = (id: number | string) => {
     return cartSneakers.some(
-      (obj: SneakersTypes) => Number(obj.id) === Number(id)
+      (obj: SneakersTypes) => Number(obj.parentId) === Number(id)
     );
   };
 

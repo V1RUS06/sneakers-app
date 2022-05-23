@@ -21,11 +21,11 @@ const Home: FC<any> = ({
     return (isLoading ? [...Array(8)] : filteredSneakers).map(
       (item: any, index: any) => (
         <CardSneakers
-          {...item}
           key={index}
-          onAddToCart={() => onAddToCart(item)}
-          onAddToFavorite={() => onAddToFavorite(item)}
+          onAddToCart={(obj) => onAddToCart(obj)}
+          onAddToFavorite={(obj) => onAddToFavorite(obj)}
           loading={isLoading}
+          {...item}
         />
       )
     );

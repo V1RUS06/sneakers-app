@@ -16,7 +16,7 @@ export const CardBasket: FC<Props> = ({ sneakersData, onRemove }) => {
       />
       <div className="mr-20 flex">
         <p className="mb-5">Мужские Кроссовки Nike Air Max 270</p>
-        <b>12 999 руб.</b>
+        <b>{sneakersData?.price} руб.</b>
       </div>
       <img
         className="removeBtn"

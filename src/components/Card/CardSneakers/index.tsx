@@ -5,8 +5,8 @@ import ContentLoader from "react-content-loader";
 import AppContext from "../../../context/AppContext";
 
 interface Props extends SneakersTypes {
-  onAddToCart?: ({ id, title, imageUrl, price }: SneakersTypes) => void;
-  onAddToFavorite?: ({ id, title, imageUrl, price }: SneakersTypes) => void;
+  onAddToCart?: (obj: SneakersTypes) => void;
+  onAddToFavorite?: (obj: SneakersTypes) => void;
   favorite?: boolean;
   loading: boolean;
 }
@@ -23,14 +23,19 @@ export const CardSneakers: FC<Props> = ({
 }) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(favorite);
   const state = useContext(AppContext);
-
-  const onFavoriteClick = () => {
-    setIsFavorite(!isFavorite);
-    onAddToFavorite && onAddToFavorite({ id, title, imageUrl, price });
-  };
+  const obj = { id, parentId: id, title, imageUrl, price };
 
   const onAddClick = () => {
-    onAddToCart && onAddToCart({ id, title, imageUrl, price });
+    if (onAddToCart) {
+      onAddToCart(obj);
+    }
+  };
+
+  const onFavoriteClick = () => {
+    if (onAddToFavorite) {
+      onAddToFavorite(obj);
+      setIsFavorite(!isFavorite);
+    }
   };
 
   return (
