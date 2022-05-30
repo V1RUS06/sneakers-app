@@ -1,11 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Header } from "./components/Header";
-
 import Drawer from "./components/Drawer";
 import { SneakersTypes } from "./types";
 import axios from "axios";
 import Home from "./pages/Home";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Favorites from "./pages/Favorites";
 import AppContext from "./context/AppContext";
 import Orders from "./pages/Orders";
@@ -141,26 +140,30 @@ function App() {
           opened={cartOpened}
         />
         <Header onOpenCart={() => setCartOpened(true)} />
-        <Route path="/" exact>
-          <Home
-            sneakers={sneakers}
-            cartSneakers={cartSneakers}
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            onChangeSearchInput={onChangeSearchInput}
-            onAddToFavorite={onAddToFavorite}
-            onAddToCart={onAddToCart}
-            onClearSearchInput={onClearSearchInput}
-            isLoading={isLoading}
-          />
-        </Route>
 
-        <Route path="/favorites" exact>
-          <Favorites onAddToFavorite={onAddToFavorite} />
-        </Route>
-        <Route path="/orders" exact>
-          <Orders />
-        </Route>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                sneakers={sneakers}
+                cartSneakers={cartSneakers}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                onChangeSearchInput={onChangeSearchInput}
+                onAddToFavorite={onAddToFavorite}
+                onAddToCart={onAddToCart}
+                onClearSearchInput={onClearSearchInput}
+                isLoading={isLoading}
+              />
+            }
+          />
+          <Route
+            path="/favorites"
+            element={<Favorites onAddToFavorite={onAddToFavorite} />}
+          />
+          <Route path="/orders" element={<Orders />} />
+        </Routes>
       </div>
     </AppContext.Provider>
   );
