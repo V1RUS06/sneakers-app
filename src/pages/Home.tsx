@@ -1,13 +1,9 @@
-import React, { FC, useContext } from "react";
-import { CardSneakers } from "../components/Card/CardSneakers";
-import { SneakersTypes } from "../types";
-import AppContext from "../context/AppContext";
+import React, {FC} from 'react';
+import {CardSneakers} from '../components/Card/CardSneakers';
 
 const Home: FC<any> = ({
   sneakers,
-  cartSneakers,
   searchValue,
-  setSearchValue,
   onChangeSearchInput,
   onAddToFavorite,
   onAddToCart,
@@ -16,18 +12,19 @@ const Home: FC<any> = ({
 }) => {
   const renderItems = () => {
     const filteredSneakers = sneakers.filter((elem: any) =>
-      elem.title.toLowerCase().includes(searchValue.toLowerCase())
+      elem.title.toLowerCase().includes(searchValue.toLowerCase()),
     );
+
     return (isLoading ? [...Array(8)] : filteredSneakers).map(
       (item: any, index: any) => (
         <CardSneakers
           key={index}
-          onAddToCart={(obj) => onAddToCart(obj)}
-          onAddToFavorite={(obj) => onAddToFavorite(obj)}
+          onAddToCart={obj => onAddToCart(obj)}
+          onAddToFavorite={obj => onAddToFavorite(obj)}
           loading={isLoading}
           {...item}
         />
-      )
+      ),
     );
   };
 
@@ -35,7 +32,7 @@ const Home: FC<any> = ({
     <div className="content p-40 ">
       <div className="d-flex justify-between">
         <h1>
-          {searchValue ? `Поиск по запросу: ${searchValue}` : "Все кроссовки"}
+          {searchValue ? `Поиск по запросу: ${searchValue}` : 'Все кроссовки'}
         </h1>
         <div className="search-block d-flex">
           <img src="/img/search.svg" alt="Search" />

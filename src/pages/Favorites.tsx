@@ -1,13 +1,13 @@
-import React, { FC, useContext } from "react";
-import { CardSneakers } from "../components/Card/CardSneakers";
-import { SneakersTypes } from "../types";
-import AppContext from "../context/AppContext";
+import React, {FC, useContext} from 'react';
+import {CardSneakers} from '../components/Card/CardSneakers';
+import {SneakersTypes} from '../types';
+import AppContext from '../context/AppContext';
 
 interface Props {
   onAddToFavorite: (obj: SneakersTypes) => void;
 }
 
-const Favorites: FC<Props> = ({ onAddToFavorite }) => {
+const Favorites: FC<Props> = ({onAddToFavorite}) => {
   const state = useContext(AppContext);
 
   return (

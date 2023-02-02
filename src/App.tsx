@@ -1,19 +1,19 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { Header } from "./components/Header";
-import Drawer from "./components/Drawer";
-import { SneakersTypes } from "./types";
-import axios from "axios";
-import Home from "./pages/Home";
-import { Route, Routes } from "react-router-dom";
-import Favorites from "./pages/Favorites";
-import AppContext from "./context/AppContext";
-import Orders from "./pages/Orders";
+import React, {ChangeEvent, useEffect, useState} from 'react';
+import {Header} from './components/Header';
+import Drawer from './components/Drawer';
+import {SneakersTypes} from './types';
+import axios from 'axios';
+import Home from './pages/Home';
+import {Route, Routes} from 'react-router-dom';
+import Favorites from './pages/Favorites';
+import AppContext from './context/AppContext';
+import Orders from './pages/Orders';
 
 function App() {
   const [cartOpened, setCartOpened] = useState<boolean>(false);
   const [sneakers, setSneakers] = useState<SneakersTypes[] | []>([]);
   const [cartSneakers, setCartSneakers] = useState<SneakersTypes[] | []>([]);
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
   const [favorites, setFavorites] = useState<SneakersTypes[] | []>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -22,9 +22,9 @@ function App() {
       try {
         const [fetchCartSneakers, fetchFavorites, fetchSneakers] =
           await Promise.all([
-            axios.get("https://60d8c024eec56d00174774c1.mockapi.io/cart"),
-            axios.get("https://60d8c024eec56d00174774c1.mockapi.io/favorites"),
-            axios.get("https://60d8c024eec56d00174774c1.mockapi.io/items"),
+            axios.get('https://60d8c024eec56d00174774c1.mockapi.io/cart'),
+            axios.get('https://60d8c024eec56d00174774c1.mockapi.io/favorites'),
+            axios.get('https://60d8c024eec56d00174774c1.mockapi.io/items'),
           ]);
 
         setIsLoading(false);
@@ -32,7 +32,7 @@ function App() {
         setFavorites(fetchFavorites.data);
         setSneakers(fetchSneakers.data);
       } catch (e) {
-        console.log("Ошибка при запросе данных", e);
+        console.log('Ошибка при запросе данных', e);
       }
     };
     fetchData();
@@ -41,21 +41,21 @@ function App() {
   const onAddToCart = async (obj: SneakersTypes) => {
     try {
       const findItem = cartSneakers.find(
-        (item) => Number(item.parentId) === Number(obj.id)
+        item => Number(item.parentId) === Number(obj.id),
       );
 
       if (findItem) {
-        setCartSneakers((prevState) =>
-          prevState.filter((item) => Number(item.parentId) !== Number(obj.id))
+        setCartSneakers(prevState =>
+          prevState.filter(item => Number(item.parentId) !== Number(obj.id)),
         );
         await axios.delete(
-          `https://60d8c024eec56d00174774c1.mockapi.io/cart/${findItem.id}`
+          `https://60d8c024eec56d00174774c1.mockapi.io/cart/${findItem.id}`,
         );
       } else {
-        setCartSneakers((prevState) => [...prevState, obj]);
-        const { data } = await axios.post(
-          "https://60d8c024eec56d00174774c1.mockapi.io/cart",
-          obj
+        setCartSneakers(prevState => [...prevState, obj]);
+        const {data} = await axios.post(
+          'https://60d8c024eec56d00174774c1.mockapi.io/cart',
+          obj,
         );
         setCartSneakers((prevState: any) =>
           prevState.map((item: any) => {
@@ -66,22 +66,22 @@ function App() {
               };
             }
             return item;
-          })
+          }),
         );
       }
     } catch (e) {
-      console.log("Ошибка при добавлении в корзину");
+      console.log('Ошибка при добавлении в корзину');
     }
   };
 
   const onRemoveItem = (id: number) => {
     try {
       axios.delete(`https://60d8c024eec56d00174774c1.mockapi.io/cart/${id}`);
-      setCartSneakers((prevState) =>
-        prevState.filter((item) => Number(item.id) !== Number(id))
+      setCartSneakers(prevState =>
+        prevState.filter(item => Number(item.id) !== Number(id)),
       );
     } catch (e) {
-      console.log("Ошибка при удалении из корзины", e);
+      console.log('Ошибка при удалении из корзины', e);
     }
   };
 
@@ -89,33 +89,33 @@ function App() {
     setSearchValue(e.target.value);
   };
   const onClearSearchInput = () => {
-    setSearchValue("");
+    setSearchValue('');
   };
 
   const onAddToFavorite = async (obj: SneakersTypes) => {
     try {
-      if (favorites.find((item) => Number(item.id) === Number(obj.id))) {
+      if (favorites.find(item => Number(item.id) === Number(obj.id))) {
         axios.delete(
-          `https://60d8c024eec56d00174774c1.mockapi.io/favorites/${obj.id}`
+          `https://60d8c024eec56d00174774c1.mockapi.io/favorites/${obj.id}`,
         );
-        setFavorites((prevState) =>
-          prevState.filter((item) => Number(item.id) !== Number(obj.id))
+        setFavorites(prevState =>
+          prevState.filter(item => Number(item.id) !== Number(obj.id)),
         );
       } else {
-        const { data } = await axios.post(
-          "https://60d8c024eec56d00174774c1.mockapi.io/favorites",
-          obj
+        const {data} = await axios.post(
+          'https://60d8c024eec56d00174774c1.mockapi.io/favorites',
+          obj,
         );
-        setFavorites((prevState) => [...prevState, data]);
+        setFavorites(prevState => [...prevState, data]);
       }
     } catch (e) {
-      console.log("Не удалось добавить в избранные");
+      console.log('Не удалось добавить в избранные');
     }
   };
 
   const isSneakersAdded = (id: number | string) => {
     return cartSneakers.some(
-      (obj: SneakersTypes) => Number(obj.parentId) === Number(id)
+      (obj: SneakersTypes) => Number(obj.parentId) === Number(id),
     );
   };
 
@@ -130,8 +130,7 @@ function App() {
         setCartSneakers,
         onAddToCart,
         onAddToFavorite,
-      }}
-    >
+      }}>
       <div className="wrapper clear">
         <Drawer
           onClose={() => setCartOpened(false)}
